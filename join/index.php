@@ -1,4 +1,6 @@
 <?php
+session_start();
+
 if (!empty($_POST)){
 	if ($_POST['name'] === '') {
 		$error['name'] = 'blank';
@@ -12,8 +14,8 @@ if (!empty($_POST)){
 	if ($_POST['password'] === '') {
 		$error['password'] = 'blank';
 	}
-
 	if (empty($error)){
+		$_session['join'] = $_POST;
 		header('Location: check.php');
 		exit();
 	}
