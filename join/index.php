@@ -14,6 +14,15 @@ if (!empty($_POST)){
 	if ($_POST['password'] === '') {
 		$error['password'] = 'blank';
 	}
+	$fileName = $_FILES['image']['name'];
+	if(!empty($fileName)){
+		$ext = substr($fileName, -3);
+		if ($ext != 'jpg' && $ext != 'gif'){
+			$error['image'] = 'type';
+		}
+	}
+
+
 	if (empty($error)){
 		$image = date('YmdHis') . $_FILES['image']
 		['name'];
@@ -80,6 +89,12 @@ if($_REQUEST['action'] == 'rewrite' && isset($_SESSION['join'])) {
 		<dt>写真など</dt>
 		<dd>
         	<input type="file" name="image" size="35" value="test"  />
+			<?php if ($error['image'] === 'type'):?> 
+			<p class="error">*対応ファイルではありません</p>
+			<?php endif; ?>
+			<?php if (!empty($error)): ?>
+			<p class="error">*もう一度画像選択してください。</p>
+			<?php endif; ?>
         </dd>
 	</dl>
 	<div><input type="submit" value="入力内容を確認する" /></div>
