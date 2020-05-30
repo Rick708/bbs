@@ -1,5 +1,6 @@
 <?php
 session_start();
+require('../dbconnect.php');
 
 if (!empty($_POST)){
 	if ($_POST['name'] === '') {
@@ -22,6 +23,15 @@ if (!empty($_POST)){
 		}
 	}
 
+	if(empty($error)){
+		$member = $db->prepare('SELECT COUNT(*) AS cnt 
+		FROM members WHERE email=?');
+		$member->execute(array($_POST['email']));
+		$record = $member->fetch();
+		if ($record['cnt'] > 0) {
+			$error['email'] = 'duplicate';
+		}
+	}
 
 	if (empty($error)){
 		$image = date('YmdHis') . $_FILES['image']
@@ -34,6 +44,8 @@ if (!empty($_POST)){
 		exit();
 	}
 }
+
+
 if($_REQUEST['action'] == 'rewrite' && isset($_SESSION['join'])) {
    $_POST = $_SESSION['join'];
 }
@@ -73,6 +85,9 @@ if($_REQUEST['action'] == 'rewrite' && isset($_SESSION['join'])) {
 			(htmlspecialchars($_POST['email'], ENT_QUOTES)); ?>" />
 			<?php if ($error['email'] === 'blank'):?> 
 			<p class="error">*メールアドレスを入力して下さい</p>
+			<?php endif; ?>
+			<?php if ($error['email'] === 'duplicate'):?> 
+			<p class="error">*指定されたメールアドレスは使用されています。</p>
 			<?php endif; ?>
 		<dt>パスワード<span class="required">必須</span></dt>
 		<dd>
