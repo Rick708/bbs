@@ -1,14 +1,15 @@
 <?php
-  require('dbconnect.php');
+session_start();
+require('dbconnect.php');
 
-if ($_COOKIE['email'] !== ''){
+if($_COOKIE['email'] !== ''){
   $email = $_COOKIE['email'];
 }
 
 if(!empty($_POST)){
   $email = $_POST['email'];
-
-  if($_POST['email'] !== '' && $_POST['password'] !== ''){
+  
+  if($_POST['email'] !== '' && $_POST['password'] !==''){
     $login = $db->prepare('SELECT * FROM members WHERE email=? AND password=?');
     $login->execute(array(
       $_POST['email'],
@@ -16,15 +17,15 @@ if(!empty($_POST)){
     ));
     $member = $login->fetch();
 
-    if ($member){
+    if($member){
       $_SESSION['id'] = $member['id'];
       $_SESSION['time'] = time();
-
-      if($_POST['save'] === 'on') {
-        setcookie('email', $_POST['email'], time()+60*60*24*14);
+      
+      if($_POST['save'] === 'on'){
+        setcookie('email', $_POST['email'],time()+60*60*24*14);
       }
 
-      header('location: index.php');
+      header('Location: index.php');
       exit();
     }else{
       $error['login'] = 'failed';

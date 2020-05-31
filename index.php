@@ -1,17 +1,35 @@
 <?php
-session_start();
-require('dbconnect.php');
+  session_start();
+  require('dbconnect.php');
 
-if(isset($_SESSION['id']) && $_SESSION['time'] + 3600 > time()){
-  $_SESSION['time'] = time();
+  //sessionに記録された時間に1時間を足した時間が現在の時刻よりも大きい場合 1時間何もしないとログアウト
+  if(isset($_SESSION['id']) && $_SESSION['time'] + 3600 > time()){
+    //最後の行動から1時間有効
+    $_SESSION['time'] = time();
 
-  $members = $db->prepare('SELECT * FROM members WHERE id=?');
-  $members->execute(array($_SESSION['id']));
-  $member = $members->fetch();
-}else{
-  header('Location: login.php');
-  exit();
-}
+    $members = $db->prepare('SELECT * FROM members WHERE id=?');
+    $members->execute(array($_SESSION['id']));
+    $member = $members->fetch();
+  }else{
+    header('Location: login.php');
+    exit();
+  }
+
+  if(!empty($_POST)){
+    //メッセージが空でない場合
+    if($_POST['message'] !== ''){
+      $message = $db->prepare('INSERT INTO posts SET member_id=?, message=?, reply_message_id=?, created=NOW()');
+      $message->execute(array(
+        $member['id'],
+        $_POST['message'],
+        $_POST['reply_post_id']
+      ));
+      
+      header('Location: index.php');
+      exit();
+    }
+  }
+
 ?>
 <!DOCTYPE html>
 <html lang="ja">
