@@ -22,4 +22,5 @@ php,MySQL,XAMPP,VScode
 　phpでもHaml(MtHaml)が使えますが使わずに使用しました。主にHamlでの学習だった為
 
 ## 画像
-![コメント 2020-06-12 222321](https://user-images.githubusercontent.com/56381794/84507197-69cc8000-acfb-11ea-8a20-3173b26a2f43.png)
+![コメント 2020-06-12 222321](https://user-images.githubusercontent.com/56381794/84571868-378d5200-add1-11ea-9c02-b57269ce179b.png)
+
